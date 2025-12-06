@@ -360,3 +360,4 @@ build/
 .vscode/
 benchmark_index/
 visualization/
+data/

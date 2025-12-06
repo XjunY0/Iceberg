@@ -157,31 +157,14 @@ make -j8
   
 
 - **run the algorithm & evaluation**
-
-  ```shell
-  case "$mode" in
-    build)
-      echo "Building index..."
-      ./test/benchmark_hnsw ${BASE_PATH} ${QUERY_FILE} ${mode} $DATA_DIM $K ${efc} ${M} ${INDEX_PREFIX_PATH} ${RESULT_PREFIX_PATH}  | tee -a "$log_file"
-      ;;
-    search)
-      echo "Searching index..."
-      for ef_search in "${efs[@]}"; do
-        echo "Running with efs: $ef_search" | tee -a "$log_file"
-        ./test/benchmark_hnsw ${BASE_PATH} ${QUERY_FILE} ${mode} ${DATA_DIM} ${K} ${efc} ${M} ${INDEX_PREFIX_PATH} ${RESULT_PREFIX_PATH} ${ef_search} | tee -a "$log_file"
-        python3 ${recall_path} ${DATA_PRE_PATH} ${PREFIX} ${TRAIN_NAME} ${TEST_NAME} ${algorithm} ${K} ${type} ${result_name} ${pre_path}| tee -a "$log_file"
-      done
-      ;;
-    *)
-      echo "Invalid mode. Use 'build' or 'search'."
-      exit 1
-      ;;
-  esac
-  ```
+  1. Configure the dataset and algorithm parameters in `config_dataset` and `run_{algorithms}.sh`
+  2. Run the algorithm using: `python3 run.py hnsw imagenet1k_dinov2 --mode build/search`
+  3. For more configuration options, refer to: `python run.py --help`
+ 
 
 ### To-Do Lists
 - ✅ Open-source code is available for the benchmarks.
-- 🔄 Docker Environment.
+- ✅ Docker Environment.
 - 🔄 More real-worlds tasks, advanced embedding models, and new algorithms.
 - 🔄 Visualization Interface.
 

@@ -15,8 +15,6 @@ add_executable(benchmark_nsg benchmark_nsg.cpp)
 target_link_libraries(benchmark_nsg PRIVATE efanna2e)
 
 add_executable(benchmark_vamana benchmark_vamana.cpp)
-target_include_directories(benchmark_vamana PRIVATE ${MKL_INCLUDE_DIR})
-target_link_libraries(benchmark_vamana PRIVATE ${MKL_LIBRARIES})
-target_compile_definitions(benchmark_vamana PRIVATE MKL_ILP64)
+target_link_libraries(benchmark_vamana PRIVATE MKL::MKL)
 
 

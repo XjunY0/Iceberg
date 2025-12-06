@@ -53,21 +53,20 @@ set(MIPS_BENCHMARK_INCLUDE_DIR
 # Define the MKL_ROOT variable. The user must provide this path during configuration
 # if it's not found automatically. Example: cmake -DMKL_ROOT=/path/to/intel/mkl ..
 if(NOT DEFINED MKL_ROOT)
-    set(MKL_ROOT "" CACHE PATH "Intel MKL root directory")
+    # If MKL_ROOT is not set, try to use the MKLROOT environment variable (set by setvars.sh)
+    if(DEFINED ENV{MKLROOT})
+        set(MKL_ROOT "$ENV{MKLROOT}" CACHE PATH "Intel MKL root directory")
+    else()
+        set(MKL_ROOT "" CACHE PATH "Intel MKL root directory")
+    endif()
 endif()
 
 set(MKL_INCLUDE_DIR "${MKL_ROOT}/include")
 
-# Manually set link libraries (example, modify as needed)
-set(MKL_LIBRARIES
-    ${MKL_ROOT}/lib/libmkl_intel_ilp64.so
-    ${MKL_ROOT}/lib/libmkl_core.so
-    ${MKL_ROOT}/lib/libmkl_sequential.so
-    pthread
-    m
-    dl
-)
-
+# oneMKL configuration knobs to avoid ambiguity
+set(MKL_INTERFACE lp64 CACHE STRING "MKL integer interface: lp64 or ilp64")
+set(MKL_THREADING sequential CACHE STRING "MKL threading: sequential, intel_thread, gnu_thread, tbb_thread")
+set(MKL_LINK dynamic CACHE STRING "MKL link type: dynamic or static")
 
 find_package(MKL REQUIRED)
 if(MKL_FOUND)
@@ -85,7 +84,8 @@ set(THRID_PARTY_INCLUDE_DIR
 include_directories(${THRID_PARTY_INCLUDE_DIR})
 message(STATUS "THRID_PARTY_INCLUDE_DIR: ${THRID_PARTY_INCLUDE_DIR}")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -funroll-loops -lprofiler -mavx")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -funroll-loops -mavx -fopenmp")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fopenmp")
 
 
 # #####################################################################################################################
@@ -100,17 +100,21 @@ else()
     message(FATAL_ERROR "Boost dynamic-bitset is required")
 endif()
 
-find_package(OpenMP REQUIRED)
-if (OPENMP_FOUND)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+# OpenMP detection is optional; we already add -fopenmp above
+find_package(OpenMP QUIET)
+if(OpenMP_CXX_FOUND)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-else()
-    message(FATAL_ERROR "OpenMP is required")
+endif()
+if(OpenMP_C_FOUND)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
 endif()
 
 
+option(ENABLE_EFANNA_GRAPH "Build efanna_graph third-party library" ON)
 add_subdirectory(test)
-add_subdirectory(third_party/efanna_graph)
+if(ENABLE_EFANNA_GRAPH)
+    add_subdirectory(third_party/efanna_graph)
+endif()
 
 
 # #####################################################################################################################
