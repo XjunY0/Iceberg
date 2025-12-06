@@ -157,7 +157,7 @@ make -j8
   
 
 - **run the algorithm & evaluation**
-  1. Configure the dataset and algorithm parameters in `config_dataset` and `run_{algorithms}.sh`
+  1. Configure the dataset and algorithm parameters in `config_dataset.sh` and `run_{algorithms}.sh`
   2. Run the algorithm using: `python3 run.py hnsw imagenet1k_dinov2 --mode build/search`
   3. For more configuration options, refer to: `python run.py --help`
  
