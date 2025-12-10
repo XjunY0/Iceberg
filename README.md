@@ -16,15 +16,16 @@ Iceberg is a comprehensive benchmark suite for end-to-end evaluation of VSS (Vec
 ## :books: Datasets
 > The dataset was not uploaded during the review period, but we are committed to releasing and maintaining it publicly on open-source platforms such as Hugging Face in the final version.
 ### Overview
-| Dataset                                                      | Base Size   | Dim  | Query Size | Domain   | Origin data source |
-| ------------------------------------------------------------ | ----------- | ---- | ---------- | -------- | ------------------ |
-| ImageNet-DINOv2  | 1,281,167       | 768  | 50,000     | Image Classification      |  https://image-net.org/index.php |
-| ImageNet-EVA02 | 1,281,167     | 1024 | 50,000      | Image Classification       | https://image-net.org/index.php|
-| ImageNet-ConvNeXt | 1,281,167    | 1536 | 50,000      | Image Classification   |https://image-net.org/index.php |
-| Glink360K-IR101 | 17,091,649   | 512  | 20,000     | Face Recognition       | https://github.com/deepinsight/insightface/tree/master/recognition/partial_fc#glint360k|
-| Glink360K-ViT | 17,091,649   | 512  | 20,000    | Face Recognition     | https://github.com/deepinsight/insightface/tree/master/recognition/partial_fc#glint360k|
-| BookCorpus  | 9,250,529   | 1024  | 10,000    | Text Retrieval      | https://huggingface.co/datasets/bookcorpus/bookcorpus|
-| Commerce  | 99,085,171     | 48  | 64,111      | Recommendation     |  |
+| Dataset           | Base Size  | Dim  | Query Size | Domain               | Origin data source                                           |
+| ----------------- | ---------- | ---- | ---------- | -------------------- | ------------------------------------------------------------ |
+| ImageNet-DINOv2   | 1,281,167  | 768  | 50,000     | Image Classification | https://image-net.org/index.php                              |
+| ImageNet-EVA02    | 1,281,167  | 1024 | 50,000     | Image Classification | https://image-net.org/index.php                              |
+| ImageNet-ConvNeXt | 1,281,167  | 1536 | 50,000     | Image Classification | https://image-net.org/index.php                              |
+| Glink360K-IR101   | 17,091,649 | 512  | 20,000     | Face Recognition     | https://github.com/deepinsight/insightface/tree/master/recognition/partial_fc#glint360k |
+| Glink360K-ViT     | 17,091,649 | 512  | 20,000     | Face Recognition     | https://github.com/deepinsight/insightface/tree/master/recognition/partial_fc#glint360k |
+| BookCorpus        | 9,250,529  | 1024 | 10,000     | Text Retrieval       | https://huggingface.co/datasets/bookcorpus/bookcorpus        |
+| Commerce          | 99,085,171 | 48   | 64,111     | Recommendation       |                                                              |
+| AG-News           | 127,600    | 3072 | 3000       | Anomaly Detection    |                                                              |
 
 ### Detailed Description
 #### D1: ImageNet 
@@ -73,7 +74,19 @@ Commerce dataset, derived from anonymized traffic logs of a major e-commerce pla
 - ResFlow: https://github.com/FuCongResearchSquad/ResFlow
 
 **End Tasks:** 
-- Popularity Score@K:  It measures whether the vectors retrieved by a query are both relevant and popular, as well as the cumulative popularity of those items.
+- Matching Score@K:  It measures whether the vectors retrieved by a query are both relevant and popular, as well as the cumulative popularity of those items.
+
+#### D5: AG-News
+
+NLP Anomaly Detection (NLP-AD) aims to identify text instances that deviate from normal linguistic patterns by using text embeddings and vector similarity search. Unlike structured data, text data is inherently unstructured, high-dimensional,and deeply influenced by the nuances of human language. We use the AG-News dataset, originally designed for news topic classification, which contains 127,600 samples across four classes: World, Sports, Business, and Sci/Tech. Texts from the description column are used as inputs for this task, with the World category designated and downsampled as the anomaly class. We form a 1:1 query set by pairing all anomaly samples with an equal number of normal samples, while the remaining normal texts serve as the base set.
+
+**Emebedding Models:**
+
+- OPENAI-text-3-large
+
+**End Tasks:** 
+
+We assign binary labels to indicate whether each text instance represents an anomaly, with anomalous samples labeled as 1 and normal samples as 0. This task adopts a kNN-distance anomaly detection criterion: for each query, the mean distance to its top-k retrieved vectors is computed and compared against a threshold derived from normal samples in the base set; samples exceeding the threshold are classified as anomalies. The downstream evaluation metric is the detection hit rate@K, defined as the proportion of anomalies correctly identified.
 
 ## :bookmark_tabs: Supported Algorithms
 
@@ -157,14 +170,31 @@ make -j8
   
 
 - **run the algorithm & evaluation**
-  1. Configure the dataset and algorithm parameters in `config_dataset.sh` and `run_{algorithms}.sh`
-  2. Run the algorithm using: `python3 run.py hnsw imagenet1k_dinov2 --mode build/search`
-  3. For more configuration options, refer to: `python run.py --help`
- 
+
+  ```shell
+  case "$mode" in
+    build)
+      echo "Building index..."
+      ./test/benchmark_hnsw ${BASE_PATH} ${QUERY_FILE} ${mode} $DATA_DIM $K ${efc} ${M} ${INDEX_PREFIX_PATH} ${RESULT_PREFIX_PATH}  | tee -a "$log_file"
+      ;;
+    search)
+      echo "Searching index..."
+      for ef_search in "${efs[@]}"; do
+        echo "Running with efs: $ef_search" | tee -a "$log_file"
+        ./test/benchmark_hnsw ${BASE_PATH} ${QUERY_FILE} ${mode} ${DATA_DIM} ${K} ${efc} ${M} ${INDEX_PREFIX_PATH} ${RESULT_PREFIX_PATH} ${ef_search} | tee -a "$log_file"
+        python3 ${recall_path} ${DATA_PRE_PATH} ${PREFIX} ${TRAIN_NAME} ${TEST_NAME} ${algorithm} ${K} ${type} ${result_name} ${pre_path}| tee -a "$log_file"
+      done
+      ;;
+    *)
+      echo "Invalid mode. Use 'build' or 'search'."
+      exit 1
+      ;;
+  esac
+  ```
 
 ### To-Do Lists
 - ✅ Open-source code is available for the benchmarks.
-- ✅ Docker Environment.
+- 🔄 Docker Environment.
 - 🔄 More real-worlds tasks, advanced embedding models, and new algorithms.
 - 🔄 Visualization Interface.
 
