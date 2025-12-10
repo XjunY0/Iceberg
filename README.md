@@ -156,10 +156,10 @@ Run `pip install -r requirements.txt`.
   ```
   
   Configuration parameters:
-  - `efc`: build parameter for HNSW (construction factor)
-  - `M`: build parameter for HNSW (max connections)
-  - `efs`: search parameter for HNSW (search factor list)
-  - `type`: distance metric type (nn for L2, ip for inner product)
+  - `efc`: build parameter for HNSW 
+  - `M`: build parameter for HNSW 
+  - `efs`: search parameter for HNSW
+  - `type`: distance metric type
 
   
 
