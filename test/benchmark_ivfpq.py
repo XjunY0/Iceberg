@@ -205,7 +205,8 @@ if __name__ == "__main__":
             str(args.top_k),
             'nn', 
             args.dataset_name,
-            args.output_path
+            args.output_path,
+            '--dataset-type', args.data_type
         ]
         
         print(f"Executing command: {' '.join(command)}")
