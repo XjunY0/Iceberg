@@ -73,7 +73,7 @@ Commerce dataset, derived from anonymized traffic logs of a major e-commerce pla
 - ResFlow: https://github.com/FuCongResearchSquad/ResFlow
 
 **End Tasks:** 
-- Popularity Score@K:  It measures whether the vectors retrieved by a query are both relevant and popular, as well as the cumulative popularity of those items.
+- Matching Score@K:  It measures whether the vectors retrieved by a query are both relevant and popular, as well as the cumulative popularity of those items.
 
 ## :bookmark_tabs: Supported Algorithms
 
