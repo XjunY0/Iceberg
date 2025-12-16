@@ -7,11 +7,11 @@ Similarity Search with Task-Centric Benchmarks</h1>
 
 <div align="center">
 
-<a href="xxx">
-  <img src="https://img.shields.io/badge/ARXIV-xxxx-b31b1b?style=flat-square&logo=arxiv&logoColor=white" alt="Arxiv">
+<a href="[xxx](https://arxiv.org/pdf/2512.12980)">
+  <img src="https://img.shields.io/badge/ARXIV-2512.12980-b31b1b?style=flat-square&logo=arxiv&logoColor=white" alt="Arxiv">
 </a>
 
-<a href="xxx">
+<a href="https://huggingface.co/datasets/PIIR/Iceberg-dataset">
   <img src="https://img.shields.io/badge/HUGGINGFACE-FFD21E?style=flat-square&logo=huggingface&logoColor=black" alt="HuggingFace">
 </a>
 
