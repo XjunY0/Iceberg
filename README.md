@@ -5,6 +5,21 @@
 <h1 align="center">Reveal Hidden Pitfalls and Navigate Next Generation of Vector
 Similarity Search with Task-Centric Benchmarks</h1>
 
+<div align="center">
+
+<a href="https://arxiv.org/pdf/2512.12980">
+  <img src="https://img.shields.io/badge/ARXIV-2512.12980-b31b1b?style=flat-square&logo=arxiv&logoColor=white" alt="Arxiv">
+</a>
+
+<a href="https://huggingface.co/datasets/PIIR/Iceberg-dataset">
+  <img src="https://img.shields.io/badge/HUGGINGFACE-FFD21E?style=flat-square&logo=huggingface&logoColor=black" alt="HuggingFace">
+</a>
+
+<a href="LICENSE">
+  <img src="https://img.shields.io/badge/LICENSE-MIT-blue.svg?style=flat-square" alt="License">
+</a>
+
+</div>
 
 ## :link: Introduction
 Iceberg is a comprehensive benchmark suite for end-to-end evaluation of VSS (Vector Similarity Search) methods in realistic application settings. It spans 7 diverse datasets across key domains including image classification, face recognition, text retrieval, and recommendation systems. Each dataset contains 1M to 100M vectors enriched with task-specific labels and metrics, enabling evaluation of retrieval algorithms within full application pipelines—not just in isolated recall-speed scenarios. Iceberg benchmarks 13 state-of-the-art VSS algorithms and re-ranks them using task-centric performance metrics, uncovering substantial deviations from conventional recall/speed-based rankings. Morever, Iceberg propose an interpretable decision tree to guide practitioners in selecting and tuning VSS methods for specific workloads.
@@ -14,7 +29,9 @@ Iceberg is a comprehensive benchmark suite for end-to-end evaluation of VSS (Vec
 </div>
 
 ## :books: Datasets
-> The dataset was not uploaded during the review period, but we are committed to releasing and maintaining it publicly on open-source platforms such as Hugging Face in the final version.
+> The dataset has been publicly released and is maintained on the Hugging Face platform.
+
+Access Link: [Iceberg-dataset](https://huggingface.co/datasets/PIIR/Iceberg-dataset)
 ### Overview
 | Dataset           | Base Size  | Dim  | Query Size | Domain               | Origin data source                                           |
 | ----------------- | ---------- | ---- | ---------- | -------------------- | ------------------------------------------------------------ |
@@ -150,7 +167,7 @@ make -j8
   }
   ```
 
-- **Configure the algorithm** (scritps/run_hnsw.sh)
+- **Configure the algorithm** (scripts/run_hnsw.sh)
 
   ```shell
   - pre_path: "${PROJECT_ROOT}/YOUR_STORED_INDEX_PATH"
