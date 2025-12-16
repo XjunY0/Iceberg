@@ -29,7 +29,9 @@ Iceberg is a comprehensive benchmark suite for end-to-end evaluation of VSS (Vec
 </div>
 
 ## :books: Datasets
-> The dataset was not uploaded during the review period, but we are committed to releasing and maintaining it publicly on open-source platforms such as Hugging Face in the final version.
+> The dataset has been publicly released and is maintained on the Hugging Face platform.
+
+Access Link: [Iceberg-dataset](https://huggingface.co/datasets/PIIR/Iceberg-dataset)
 ### Overview
 | Dataset                                                      | Base Size   | Dim  | Query Size | Domain   | Origin data source |
 | ------------------------------------------------------------ | ----------- | ---- | ---------- | -------- | ------------------ |
