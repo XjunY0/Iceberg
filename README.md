@@ -7,7 +7,7 @@ Similarity Search with Task-Centric Benchmarks</h1>
 
 <div align="center">
 
-<a href="[xxx](https://arxiv.org/pdf/2512.12980)">
+<a href="https://arxiv.org/pdf/2512.12980">
   <img src="https://img.shields.io/badge/ARXIV-2512.12980-b31b1b?style=flat-square&logo=arxiv&logoColor=white" alt="Arxiv">
 </a>
 
