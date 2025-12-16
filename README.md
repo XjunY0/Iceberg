@@ -5,6 +5,21 @@
 <h1 align="center">Reveal Hidden Pitfalls and Navigate Next Generation of Vector
 Similarity Search with Task-Centric Benchmarks</h1>
 
+<div align="center">
+
+<a href="https://arxiv.org/pdf/2512.12980">
+  <img src="https://img.shields.io/badge/ARXIV-2512.12980-b31b1b?style=flat-square&logo=arxiv&logoColor=white" alt="Arxiv">
+</a>
+
+<a href="https://huggingface.co/datasets/PIIR/Iceberg-dataset">
+  <img src="https://img.shields.io/badge/HUGGINGFACE-FFD21E?style=flat-square&logo=huggingface&logoColor=black" alt="HuggingFace">
+</a>
+
+<a href="LICENSE">
+  <img src="https://img.shields.io/badge/LICENSE-MIT-blue.svg?style=flat-square" alt="License">
+</a>
+
+</div>
 
 ## :link: Introduction
 Iceberg is a comprehensive benchmark suite for end-to-end evaluation of VSS (Vector Similarity Search) methods in realistic application settings. It spans 7 diverse datasets across key domains including image classification, face recognition, text retrieval, and recommendation systems. Each dataset contains 1M to 100M vectors enriched with task-specific labels and metrics, enabling evaluation of retrieval algorithms within full application pipelines—not just in isolated recall-speed scenarios. Iceberg benchmarks 13 state-of-the-art VSS algorithms and re-ranks them using task-centric performance metrics, uncovering substantial deviations from conventional recall/speed-based rankings. Morever, Iceberg propose an interpretable decision tree to guide practitioners in selecting and tuning VSS methods for specific workloads.
@@ -14,7 +29,9 @@ Iceberg is a comprehensive benchmark suite for end-to-end evaluation of VSS (Vec
 </div>
 
 ## :books: Datasets
-> The dataset was not uploaded during the review period, but we are committed to releasing and maintaining it publicly on open-source platforms such as Hugging Face in the final version.
+> The dataset has been publicly released and is maintained on the Hugging Face platform.
+
+Access Link: [Iceberg-dataset](https://huggingface.co/datasets/PIIR/Iceberg-dataset)
 ### Overview
 | Dataset                                                      | Base Size   | Dim  | Query Size | Domain   | Origin data source |
 | ------------------------------------------------------------ | ----------- | ---- | ---------- | -------- | ------------------ |
@@ -105,59 +122,51 @@ git clone project
 ### Environment Requirements
 
 ```bash
-GCC 4.9+ with OpenMP; Python 3.10+; CMake 2.8+; Boost 1.55+; MKL; ScaNN; Faiss
+Python 3.10+; docker; pyyaml
 ```
-### Build the project
+Run `pip install -r requirements.txt`.
 
-```bash
-cd project
-mkdir build && cd build
-cmake .. 
-make -j8
-```
 
 ### Run the benchmark
-**Example**: We use HNSW for the ImageNet dataset as an example to run the benchmark (./scripts/run_hnsw.sh).
+**Example**: We use HNSW for the ImageNet dataset as an example to run the benchmark.
 
-- **Configure the dataset**:
+- **Configure the dataset** (config/dataset.yaml):
 
-  ```shell
-  dataset_imagenet1k_avg() {
-    BASE_PATH="/path/to/your/dataset_root/data-base.bin"
-    QUERY_FILE="/path/to/your/dataset_root/data-query.bin"
-    PREFIX="data"
-    K=100
-    DATA_DIM=1536
-    DATASET_TYPE="dataset_root"
-    DATA_PRE_PATH="/path/to/your/dataset_root"
-    TRAIN_NAME="data-base"
-    TEST_NAME="data-query"
-    data_num=1281167
-    query_num=50000
-  }
+  ```yaml
+  imagenet1k_avg:
+    dataset_type: imagenet
+    data_pre: imagenet-1k
+    train_name: convnext-avg-pool-train.bin
+    test_name: convnext-avg-pool-validation.bin
+    train_path: /workspace/data/imagenet-1k/convnext-avg-pool-train.bin
+    test_path: /workspace/data/imagenet-1k/convnext-avg-pool-validation.bin
+    prefix: convnext-avg-pool
+    data_dim: 1536
+    k: 100
+    data_num: 1281167
+    query_num: 50000
   ```
 
-- **Configure the algorithm** (scritps/run_hnsw.sh)
+- **Configure the algorithm** (config/algorithm.yaml)
 
-  ```shell
-  - pre_path: "${PROJECT_ROOT}/YOUR_STORED_INDEX_PATH"
-  - algorithm: "Algorithm Name"
-  - mode: "build/search"
-  - efc: "build parameter for HNSW"
-  - M: "build parameter for HNSW"
-  - efs: "search parameter for HNSW"
-  - type: "NN/IP"
-  - INDEX_PREFIX_PATH: "${pre_path}/${algorithm}/${PREFIX}_M${M}_L${efc}.index"
-  - RESULT_PREFIX_PATH: "${pre_path}/${algorithm}/${PREFIX}_M${M}_L${efc}.result"
-  - log_file: "${pre_path}/${algorithm}/${PREFIX}_M${M}_L${efc}.log"
-  - recall_path: "${PROJECT_ROOT}/tools/recall_${DATASET_TYPE}.py"
-  - result_name: "${PREFIX}_M${M}_L${efc}"
+  ```yaml
+  hnsw:
+    efc: 256
+    M: 32
+    efs: [100, 200, 300, 400, 500, 600, 800, 1000, 1500]
+    type: nn
   ```
+  
+  Configuration parameters:
+  - `efc`: build parameter for HNSW 
+  - `M`: build parameter for HNSW 
+  - `efs`: search parameter for HNSW
+  - `type`: distance metric type
 
   
 
 - **run the algorithm & evaluation**
-  1. Configure the dataset and algorithm parameters in `config_dataset.sh` and `run_{algorithms}.sh`
+  1. Configure the dataset and algorithm parameters in `config/dataset.yaml` and `config/algorithm.yaml`
   2. Run the algorithm using: `python3 run.py hnsw imagenet1k_dinov2 --mode build/search`
   3. For more configuration options, refer to: `python run.py --help`
  
